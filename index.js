@@ -50,7 +50,7 @@ app.listen("3000", () => {
 })
 mongoose.connect("mongodb://localhost:27017")
     .then(data => console.log("Database Connected"))
-    .catch(error => console.log("Error"))
+    .catch(error => console.log("error"))
 
 
 
