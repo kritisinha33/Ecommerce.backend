@@ -2,7 +2,7 @@ const users = require("../Models/users")
 const jwt = require("jsonwebtoken")
 
 
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
     const { name, phone, email, password } = req.body
     // console.log(req.body)
     const _user = new users({
@@ -13,7 +13,9 @@ exports.register = async (req, res) => {
     })
     if (!eusers) {
         _user.save().then(newUser => {
-            return res.status(201).json({message:"Account Created Successfully"})
+            req.subject = "User Registration"
+            req.text = "you have successfully signed up"
+            next()
         }).
             catch(error => {
                 res.status(400).json
@@ -31,37 +33,39 @@ exports.register = async (req, res) => {
 
 }
 exports.login = async (req, res) => {
-    const {email, password} = req.body
+    const { email, password } = req.body
 
     const eusers = await users.findOne({
-        email})
+        email
+    })
     if (eusers) {
-        if(eusers.authenticate(password)){
+        if (eusers.authenticate(password)) {
             const token = jwt.sign({
                 id: eusers._id
-            },"MyAPPSECRET",{
-                expiresIn:"24h"
+            }, "MyAPPSECRET", {
+                expiresIn: "24h"
             })
             return res.status(200).json({
-                message:"Login Successful",
-                token , isSuccess:true
+                message: "Login Successful",
+                token, isSuccess: true
             })
 
-        }else{
+        } else {
             return res.status(401).json({
-                message:"Email or password incorrect"
+                message: "Email or password incorrect"
             })
         }
-        
+
     } else {
         return res.status(404).json({
-                message: "user not found please signup"})
+            message: "user not found please signup"
+        })
     }
-    
+
 }
-exports.finduser = async (req,res)=>{
+exports.finduser = async (req, res) => {
     const user = await users.findById(req.id)
-    return res.status(200).json({user})
+    return res.status(200).json({ user })
 }
 
 

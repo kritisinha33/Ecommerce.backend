@@ -1,5 +1,6 @@
 const express = require("express")
 const mongoose = require("mongoose")
+require ('dotenv').config()
 const user = require("./src/Models/users")
 const { register,login, finduser } = require("./src/controllers/users")
 
@@ -14,6 +15,7 @@ const io = new Server(app)
 const cors = require("cors")
 const { verifyToken, validateForm, isValidated } = require("./src/Middlewares")
 const { addForm } = require("./src/controllers/Form")
+const { sendEmail } = require("./src/Helper/Email")
 
 
 server.use(express.json())
@@ -25,7 +27,7 @@ server.get("/", (req, res) => {
         uphone: "4883838"
     })
 })
-server.post("/register", register)
+server.post("/register", register,sendEmail)
 server.post("/login",login)
 server.post("/addForm",validateForm,isValidated,addForm);
 
@@ -44,11 +46,13 @@ io.on("connection",socket=>{
     socket.emit("joined")
    })
 })
+const port = process.env.PORT ;
 
-app.listen("3000", () => {
+app.listen(port, () => {
     console.log("server started")
 })
-mongoose.connect("mongodb://localhost:27017")
+const mongodb =process.env.MONGODB_url
+mongoose.connect(mongodb)
     .then(data => console.log("Database Connected"))
     .catch(error => console.log("error"))
 
