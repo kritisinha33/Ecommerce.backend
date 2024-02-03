@@ -7,7 +7,7 @@ exports.verifyToken = (req,res,next) =>{
         const token = req.headers.authorization
         console.log(token);
         if(token){
-            const data = jwt.verify(token,"MYAPPSECRET")
+            const data = jwt.verify(token,"MyAPPSECRET")
             const{id} = data;
             console.log(id);
             req.id = id;

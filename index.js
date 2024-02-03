@@ -2,7 +2,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 require ('dotenv').config()
 const user = require("./src/Models/users")
-const { register,login, finduser } = require("./src/controllers/users")
+const { register,login, finduser, updateUser } = require("./src/controllers/users")
 
 
 const http = require("http")
@@ -30,9 +30,12 @@ server.get("/", (req, res) => {
 server.post("/register", register,sendEmail)
 server.post("/login",login)
 server.post("/addForm",validateForm,isValidated,addForm);
+server.put("/updateUser",verifyToken,updateUser);
+server.get("/get-product/:id",(req,res)=>{
+    res.send(req.params.id)
+})
 
-
-server.get("/get-user",verifyToken,finduser)
+server.get("/get-user",verifyToken,finduser,updateUser)
 
 io.on("connection",socket=>{
     console.log("new user connected");
@@ -52,7 +55,8 @@ app.listen(port, () => {
     console.log("server started")
 })
 const mongodb =process.env.MONGODB_url
-mongoose.connect(mongodb)
+mongoose.connect(`mongodb+srv:${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.asoxiru.mongodb.net/?retryWrites=true&w=majority
+`)
     .then(data => console.log("Database Connected"))
     .catch(error => console.log("error"))
 
