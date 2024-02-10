@@ -55,10 +55,9 @@ app.listen(port, () => {
     console.log("server started")
 })
 const mongodb =process.env.MONGODB_url
-mongoose.connect(`mongodb+srv:${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.asoxiru.mongodb.net/?retryWrites=true&w=majority
-`)
+mongoose.connect(`mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASS}@ac-6rlxssb-shard-00-00.asoxiru.mongodb.net:27017,ac-6rlxssb-shard-00-01.asoxiru.mongodb.net:27017,ac-6rlxssb-shard-00-02.asoxiru.mongodb.net:27017/?ssl=true&replicaSet=atlas-cviqqs-shard-0&authSource=admin&retryWrites=true&w=majority`)
     .then(data => console.log("Database Connected"))
-    .catch(error => console.log("error"))
+    .catch(error => console.log(error))
 
 
 
